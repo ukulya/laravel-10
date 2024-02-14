@@ -182,8 +182,8 @@ class AvatarController extends Controller
         //     "updated_at" => "2024-02-14 11:22:47"
         //   ]
 
-//         $path = $request->file('avatar')->store('avatars');
-//         auth()->user()->update(['avatar' => storage_path('app')."/$path"]);
+        // $path = $request->file('avatar')->store('avatars');
+        // auth()->user()->update(['avatar' => storage_path('app/public')."/$path"]);
 //         dd(auth()->user());
 //          #attributes: array:9 [▼
 //     "id" => 1
@@ -196,5 +196,20 @@ class AvatarController extends Controller
 //     "created_at" => "2024-02-05 09:34:31"
 //     "updated_at" => "2024-02-14 11:26:56"
 //   ]
+
+        // $path = $request->file('avatar')->store('public/avatars');
+        // auth()->user()->update(['avatar' => storage_path('app')."/$path"]);
+        // dd($path); //"public/avatars/6DPDLMKr4zvxXmrsFi88Gke5hR4KgX869uXE4gbl.jpg"  // not good public/avatars
+
+
+        // $path = $request->file('avatar')->store('avatars','public');
+        // auth()->user()->update(['avatar' => storage_path('app')."/$path"]);
+        // dd($path); //"avatars/6DPDLMKr4zvxXmrsFi88Gke5hR4KgX869uXE4gbl.jpg"  // good avatars
+
+        // we need to store the path without storage_path link
+        $path = $request->file('avatar')->store('avatars','public');
+        auth()->user()->update(['avatar' => $path]);
+        dd($path); // "avatars/kKepfe65af2ikV3jeDC0JI3i8cOdK1GM03Vophpg.jpg"
+
     }
 }

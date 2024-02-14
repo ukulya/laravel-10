@@ -3,7 +3,8 @@
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
             {{ __('User Avatar') }}
         </h2>
-        <img src="{{$user->avatar}}" alt="">
+        <img src="{{$user->avatar}}" alt="" class="d-none"><!-- we need to add storage -->
+        <img src='{{"/storage/$user->avatar"}}' alt="" class="w-10 h-10 rounded-full">
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
             {{ __("Add or Update User Avatar.") }}
         </p>
