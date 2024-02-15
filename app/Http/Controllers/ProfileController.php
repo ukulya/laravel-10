@@ -78,6 +78,8 @@ class ProfileController extends Controller
         // we cant see the img now - laravel doesnt have access to storage - we need to create symbolic link - symlink
         // run php artisan storage:link //  INFO  The [D:\ospanel\domains\laravel-10\public\storage] link has been connected to [D:\ospanel\domains\laravel-10\storage\app/public].  
 
+
+        
         // here we're sending user info together with view - as a 2nd param you can pass array of data
         return view('profile.edit', [
             'user' => $request->user(),

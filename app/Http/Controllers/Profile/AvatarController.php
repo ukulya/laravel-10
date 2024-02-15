@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Profile;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateAvatarRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AvatarController extends Controller
 {
@@ -184,18 +185,18 @@ class AvatarController extends Controller
 
         // $path = $request->file('avatar')->store('avatars');
         // auth()->user()->update(['avatar' => storage_path('app/public')."/$path"]);
-//         dd(auth()->user());
-//          #attributes: array:9 [▼
-//     "id" => 1
-//     "name" => "Urkuiash"
-//     "email" => "ukulya150992@gmail.com"
-//     "avatar" => "D:\ospanel\domains\laravel-10\storage\app/avatars/SSAcHLPU1cAUuYsQZk0hIv3y4JKBV67K9LweTIDi.jpg"
-//     "email_verified_at" => null
-//     "password" => "$2y$12$hwv4.gr6QR.6liwyq8JXrORiELVEfw8yTK3fAgX8qkxtY/c.bJ11S"
-//     "remember_token" => null
-//     "created_at" => "2024-02-05 09:34:31"
-//     "updated_at" => "2024-02-14 11:26:56"
-//   ]
+        //         dd(auth()->user());
+        //          #attributes: array:9 [▼
+        //     "id" => 1
+        //     "name" => "Urkuiash"
+        //     "email" => "ukulya150992@gmail.com"
+        //     "avatar" => "D:\ospanel\domains\laravel-10\storage\app/avatars/SSAcHLPU1cAUuYsQZk0hIv3y4JKBV67K9LweTIDi.jpg"
+        //     "email_verified_at" => null
+        //     "password" => "$2y$12$hwv4.gr6QR.6liwyq8JXrORiELVEfw8yTK3fAgX8qkxtY/c.bJ11S"
+        //     "remember_token" => null
+        //     "created_at" => "2024-02-05 09:34:31"
+        //     "updated_at" => "2024-02-14 11:26:56"
+        //   ]
 
         // $path = $request->file('avatar')->store('public/avatars');
         // auth()->user()->update(['avatar' => storage_path('app')."/$path"]);
@@ -207,9 +208,26 @@ class AvatarController extends Controller
         // dd($path); //"avatars/6DPDLMKr4zvxXmrsFi88Gke5hR4KgX869uXE4gbl.jpg"  // good avatars
 
         // we need to store the path without storage_path link
-        $path = $request->file('avatar')->store('avatars','public');
-        auth()->user()->update(['avatar' => $path]);
-        dd($path); // "avatars/kKepfe65af2ikV3jeDC0JI3i8cOdK1GM03Vophpg.jpg"
+        // $path = $request->file('avatar')->store('avatars','public');
+        // auth()->user()->update(['avatar' => $path]);
+        // dd($path); // "avatars/kKepfe65af2ikV3jeDC0JI3i8cOdK1GM03Vophpg.jpg"
 
+        // delete old file before uploading new one - use Facades/Storage
+        // $path = $request->file('avatar')->store('avatars', 'public');
+        // if ($oldAvatar = $request->user()->avatar) {
+        //     // dd($oldAvataer); // "avatars/XoVy7jgAvFNf3LUsquXQP8pjj9TP7wQt8MMvcBw2.jpg"
+        //     // Storage::delete($oldAvataer);    doesnt work 
+        //     Storage::disk('public')->delete($oldAvatar);    //doesnt work - Disk [pubilc] does not have a configured driver.
+        // }
+        // auth()->user()->update(['avatar' => $path]);
+
+        // we can also use storage to create dirs and files
+
+        $path = Storage::disk('public')->put('avatars', $request->file('avatar')); 
+        // dd($path);// "avatars/HHaohYuiBfVTZGnrIa4NHBRZxbIPmFF3aOkosDNo.jpg"
+        if ($oldAvatar = $request->user()->avatar) {
+            Storage::disk('public')->delete($oldAvatar); 
+        }
+        auth()->user()->update(['avatar' => $path]);
     }
 }
